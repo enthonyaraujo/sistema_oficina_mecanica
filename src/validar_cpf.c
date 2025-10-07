@@ -2,6 +2,7 @@
 #include <string.h>
 #include "../include/clientes.h"
 
+ // link do algoritmo: https://www.macoratti.net/alg_cpf.htm
 
 int validarcpf(int cpf[11]){ 
     int primeiro_digito, segundo_digito, resto1, resto2;
