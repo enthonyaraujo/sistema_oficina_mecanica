@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "../include/clientes.h"
+#include "../include/veiculos.h"
 #include "../include/structs.h"
 
 int main(){
@@ -19,13 +20,12 @@ int main(){
             printf("Fechando programa...\n");
             break;
         case 1:
-            MenuClientes();    
+            menuClientes();    
             break;
         case 2:
-
+            menuVeiculos();
             break;
         case 3:
-
             break;
         case 4:
             break;

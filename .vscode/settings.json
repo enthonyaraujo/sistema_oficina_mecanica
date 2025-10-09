@@ -3,6 +3,7 @@
         "structs.h": "c",
         "clientes.h": "c",
         "stdio.h": "c",
-        "validar_cpf.h": "c"
+        "validar_cpf.h": "c",
+        "stdlib.h": "c"
     }
 }

@@ -6,7 +6,7 @@ typedef struct
     char nome[100];
     char cpf[20]; // deve conter 11 numeros
     char telefone[50]; // deve conter 12 numeros
-} clientes;
+} cliente;
 
 typedef struct 
 {
@@ -14,7 +14,7 @@ typedef struct
     char modelo[50];
     int ano;
     char *clientePtr;
-} veiculos;
+} veiculo;
 
 typedef enum{
     AGUARDANDO_AVALIACAO,
@@ -25,7 +25,7 @@ typedef enum{
 
 typedef struct {
     int idOrdem;               
-    veiculos *veiculo;          
+    veiculo *veiculo;          
     char dataEntrada[11];      
     char descricaoProblema[256]; 
     statusOrdem status;
