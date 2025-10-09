@@ -8,6 +8,108 @@
 cliente *lista = NULL; //ponteiro para lista, inicialmente sem memoria alocada
 int count = 0; // contador 
 
+int cpf_duplicado(const char *cpf) {
+    for (int i = 0; i < count; i++) {
+        if (strcmp(lista[i].cpf, cpf) == 0) {
+            return 1; // CPF já existe
+        }
+    }
+    return 0; // CPF não encontrado
+}
+
+void imprimir_lista(){
+    if (count == 0){
+        printf("Nenhum cliente cadastrado\n");
+        return;
+    }
+    printf("Lista de clientes cadastrados: \n");
+    for (int i = 0; i < count; i++)
+    {
+        printf("Nome: %s \n",lista[i].nome);
+        printf("CPF: %s \n",lista[i].cpf);
+        printf("Telefone: %s \n",lista[i].telefone);
+        printf("\n");
+    }
+    
+}
+
+void remover_cliente_por_cpf() {
+    if (count == 0) {
+        printf("Nenhum cliente cadastrado.\n");
+        return;
+    }
+
+    char cpf_busca[20];
+    printf("Digite o CPF do cliente que deseja remover: ");
+    fgets(cpf_busca, sizeof(cpf_busca), stdin);
+    cpf_busca[strcspn(cpf_busca, "\n")] = 0;
+    
+    if (cpf_duplicado(cpf_busca))
+    {
+        printf("\n");
+    }
+
+
+    int pos = -1;
+    for (int i = 0; i < count; i++) {
+        if (strcmp(lista[i].cpf, cpf_busca) == 0) {
+            pos = i;
+            break;
+        }
+    }
+
+    if (pos == -1) {
+        printf("Cliente com CPF %s não encontrado.\n", cpf_busca);
+        return;
+    }
+
+    for (int i = pos; i < count -1; i++) {
+        lista[i] = lista[i + 1];
+    }
+    count--;
+
+    if (count > 0) {
+        cliente *temp = realloc(lista, sizeof(cliente) * count);
+        if (temp != NULL) lista = temp;
+    } else {
+        free(lista);
+        lista = NULL;
+    }
+
+    printf("Cliente removido com sucesso.\n");
+}
+
+
+void atualizar_cliente() {
+    if (count == 0) {
+        printf("Nenhum cliente cadastrado.\n");
+        return;
+    }
+
+    char cpf_busca[20];
+    printf("Digite o CPF do cliente que deseja atualizar: ");
+    fgets(cpf_busca, sizeof(cpf_busca), stdin);
+    cpf_busca[strcspn(cpf_busca, "\n")] = 0;
+
+    for (int i = 0; i < count; i++) {
+        if (strcmp(lista[i].cpf, cpf_busca) == 0) {
+            printf("Cliente encontrado\n" ); //lista[i].nome
+            printf("Digite o novo nome: ");
+            char novo_nome[100];
+            fgets(novo_nome, sizeof(novo_nome), stdin);
+            novo_nome[strcspn(novo_nome, "\n")] = 0;
+
+            strcpy(lista[i].nome, novo_nome);
+            printf("Nome atualizado com sucesso.\n");
+
+            return;
+        }
+    }
+
+    printf("Cliente com CPF %s não encontrado.\n", cpf_busca);
+}
+
+
 void adiciona_cliente(const char *nome, const char *cpf, const char *telefone) { // funcao para adicionar cliente, recebe strings para adicao na lista de clientes
     lista = realloc(lista, sizeof(cliente) * (count + 1));  // count + 1 clientes (para nao precisar definir um valor fixo do tamanho da lista)
     strcpy(lista[count].nome, nome); 
@@ -58,30 +160,41 @@ void salvar_clientes_no_arquivo(const char *nome_arquivo) { // funcao para escre
     fclose(arquivo);
 }
 
-int cadastroClientes() { // funcao para cadastrar os clientes
+int cadastro_clientes() { // funcao para cadastrar os clientes
     char nome_arquivo[] = "data/clientes.txt"; // nome do arquivo
 
     carregar_clientes_do_arquivo(nome_arquivo);
-
-    char nome[100], cpf[20], telefone[50];
+    cliente novoCliente;
+    cliente *novoClientePtr = &novoCliente;
+    
     int opcao, ch;
 
     do {
         printf("\n== Cadastro de Clientes ==\n");
 
         printf("Digite o nome: \n");
-        fgets(nome, sizeof(nome), stdin);
-        nome[strcspn(nome, "\n")] = 0;
+        fgets(novoClientePtr->nome, sizeof(novoClientePtr->nome), stdin);
+        novoClientePtr->nome[strcspn(novoClientePtr->nome, "\n")] = 0;
 
-        printf("Digite o cpf: \n");
-        fgets(cpf, sizeof(cpf), stdin);
-        cpf[strcspn(cpf, "\n")] = 0;
+        while (1) {
+            printf("Digite o CPF: \n");
+            fgets(novoClientePtr->cpf, sizeof(novoClientePtr->cpf), stdin);
+            novoClientePtr->cpf[strcspn(novoClientePtr->cpf, "\n")] = 0;
+
+            if (cpf_duplicado(novoClientePtr->cpf)) {
+                printf("CPF já cadastrado. Digite outro CPF.\n");
+            } else {
+                break;
+            }
+        }
+
+        ler_cpf(novoClientePtr->cpf);
 
         printf("Digite o número de telefone: \n");
-        fgets(telefone, sizeof(telefone), stdin);
-        telefone[strcspn(telefone, "\n")] = 0;
+        fgets(novoClientePtr->telefone, sizeof(novoClientePtr->telefone), stdin);
+        novoClientePtr->telefone[strcspn(novoClientePtr->telefone, "\n")] = 0;
 
-        adiciona_cliente(nome, cpf, telefone);
+        adiciona_cliente(novoClientePtr->nome, novoClientePtr->cpf, novoClientePtr->telefone);
 
         printf("Deseja salvar outro cliente? (1 - sim / 2 - nao)\n");
         scanf("%d", &opcao);
@@ -96,6 +209,7 @@ int cadastroClientes() { // funcao para cadastrar os clientes
 }
 
 void menuClientes() { //funcao menu no arquivo
+    carregar_clientes_do_arquivo("data/clientes.txt");
     int opcao;
 
     do {
@@ -115,16 +229,18 @@ void menuClientes() { //funcao menu no arquivo
                 printf("Voltando ao menu principal...\n");
                 break;
             case 1:
-                cadastroClientes();
+                cadastro_clientes();
                 break;
             case 2:
-                printf("Função de atualizar cliente.\n");
+                atualizar_cliente();
+                salvar_clientes_no_arquivo("data/clientes.txt");
                 break;
             case 3:
-                printf("Função de listar cliente.\n");
+                imprimir_lista();
                 break;
             case 4:
-                printf("Função de remover cliente.\n");
+                remover_cliente_por_cpf();
+                salvar_clientes_no_arquivo("data/clientes.txt");
                 break;
             default:
                 printf("Opção inválida. Tente novamente.\n");
@@ -132,4 +248,5 @@ void menuClientes() { //funcao menu no arquivo
         }
 
     } while (opcao != 0);
+    free(lista);
 }
