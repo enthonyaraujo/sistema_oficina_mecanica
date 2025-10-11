@@ -3,3 +3,8 @@ Modelo: pop100
 Ano: 2021
 CPF do cliente associado: 09383294485
 
+Placa: rge1g82
+Modelo: pop
+Ano: 2021
+CPF do cliente associado: 09383294485
+
