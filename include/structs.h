@@ -16,26 +16,20 @@ typedef struct
     cliente *clientePtr;
 } veiculo;
 
-typedef enum{
+typedef enum {
     AGUARDANDO_AVALIACAO,
-    EM_REPARO, 
-    FINALIZADO, 
+    EM_REPARO,
+    FINALIZADO,
     ENTREGUE
 } statusOrdem;
 
-typedef struct {
-    int dia;
-    int mes;
-    int ano;
-} data;
-
-typedef struct {
-    int idOrdem;               
-    veiculo *veiculo;          
-    char dataEntrada[11];      
-    char descricaoProblema[256]; 
+typedef struct ordemServico {
+    int idOrdem;
+    veiculo *veiculo;
+    char dataEntrada[20];
+    char descricaoProblema[256];
     statusOrdem status;
-} ordemServico;        
+} ordemServico;       
 
 #endif
 
