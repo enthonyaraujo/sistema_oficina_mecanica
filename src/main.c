@@ -31,9 +31,6 @@ int main(){
         case 3:
             total_veiculos = 0;
             lista_veiculos = carregar_veiculos(&total_veiculos);
-            if (!lista_veiculos){
-                printf("Nenhum veículo cadastrado.\n");
-            }
             menuOrdens();
             break;
         case 4:

@@ -14,10 +14,10 @@ int total_veiculos = 0;
 extern veiculo *lista_veiculos; 
 extern int total_veiculos;   
 
-veiculo* buscar_veiculo_por_placa(const char *placa) {
-    for (int i = 0; i < total_veiculos; i++) {
-        if (strcmp(lista_veiculos[i].placa, placa) == 0) {
-            return &lista_veiculos[i];
+veiculo* buscar_veiculo_por_placa(veiculo *veiculos, int total, const char *placa) {
+    for (int i = 0; i < total; i++) {
+        if (strcasecmp(veiculos[i].placa, placa) == 0) { // ignorar caixa
+            return &veiculos[i];
         }
     }
     return NULL;

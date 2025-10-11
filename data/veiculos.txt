@@ -1,0 +1,5 @@
+Placa: rge1g81
+Modelo: pop100
+Ano: 2021
+CPF do cliente associado: 09383294485
+
