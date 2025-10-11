@@ -7,7 +7,7 @@ extern veiculo *lista_veiculos;
 extern int total_veiculos;
 
 
-veiculo* carregar_veiculos_de_arquivo(int *total, const char *nome_arquivo);
+veiculo* carregar_veiculos(int *total);
 veiculo* buscar_veiculo_por_placa(veiculo *veiculos, int total, const char *placa);
 
 void salvar_todos_veiculos(veiculo *veiculos, int total);

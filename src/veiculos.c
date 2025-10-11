@@ -16,7 +16,7 @@ extern int total_veiculos;
 
 veiculo* buscar_veiculo_por_placa(veiculo *veiculos, int total, const char *placa) {
     for (int i = 0; i < total; i++) {
-        if (strcasecmp(veiculos[i].placa, placa) == 0) { // ignorar caixa
+        if (strcasecmp(veiculos[i].placa, placa) == 0) { 
             return &veiculos[i];
         }
     }
@@ -67,15 +67,14 @@ void remover_veiculo(veiculo **veiculos, int *total) {
 }
 
 
-void atualizar_veiculo(veiculo *veiculos, int total) {
-    int totalVeiculos = 0;
+void atualizar_veiculo(veiculo *veiculos, int totalVeiculos) {
     if (veiculos == NULL || totalVeiculos == 0) {
         printf("Nenhum veículo cadastrado para atualizar.\n");
         return;
     }
 
     char placa_buscar[20];
-    printf("Digite a placa do veículo que deseja atualizar: ");  //buscando pelo cpf (achei mais facil)
+    printf("Digite a placa do veículo que deseja atualizar: ");
     fgets(placa_buscar, sizeof(placa_buscar), stdin);
     placa_buscar[strcspn(placa_buscar, "\n")] = 0;
 
@@ -89,7 +88,6 @@ void atualizar_veiculo(veiculo *veiculos, int total) {
             printf(" Ano: %d\n", veiculos[i].ano);
             printf(" Cliente: %s\n", veiculos[i].clientePtr->nome);
 
-            // atualizar modelo
             printf("Digite o novo modelo (Enter para manter atual): ");
             char novo_modelo[50];
             fgets(novo_modelo, sizeof(novo_modelo), stdin);
@@ -98,7 +96,6 @@ void atualizar_veiculo(veiculo *veiculos, int total) {
                 strcpy(veiculos[i].modelo, novo_modelo);
             }
 
-            // atualizar ano
             printf("Digite o novo ano (0 para manter atual): ");
             int novo_ano;
             scanf("%d", &novo_ano);
@@ -107,7 +104,6 @@ void atualizar_veiculo(veiculo *veiculos, int total) {
                 veiculos[i].ano = novo_ano;
             }
 
-            // atualizar CPF do cliente
             printf("Digite o novo CPF do cliente (Enter para manter atual): ");
             char novo_cpf[20];
             fgets(novo_cpf, sizeof(novo_cpf), stdin);
@@ -130,8 +126,6 @@ void atualizar_veiculo(veiculo *veiculos, int total) {
     if (!encontrado) {
         printf("Veículo com placa %s não encontrado.\n", placa_buscar);
     }
-
-    free(veiculos);
 }
 
 
@@ -157,13 +151,20 @@ void imprimir_veiculos(veiculo *veiculos, int total) {
 
 void salvar_todos_veiculos(veiculo *veiculos, int total) {
     FILE *arquivo = fopen("data/veiculos.txt", "w");
-    if (!arquivo) return;
-    for (int i = 0; i < total; i++) {
-        fprintf(arquivo,"Placa: %s\n",veiculos[i].placa);
-        fprintf(arquivo,"Modelo: %s\n",veiculos[i].modelo);
-        fprintf(arquivo,"Ano: %d\n",veiculos[i].ano);
-        fprintf(arquivo,"CPF do cliente associado: %s\n\n",veiculos[i].clientePtr->cpf);
+    if (!arquivo) {
+        perror("Erro ao abrir arquivo de veículos");
+        return;
     }
+
+    printf("Salvando %d veículos...\n", total);
+
+    for (int i = 0; i < total; i++) {
+        fprintf(arquivo, "Placa: %s\n", veiculos[i].placa);
+        fprintf(arquivo, "Modelo: %s\n", veiculos[i].modelo);
+        fprintf(arquivo, "Ano: %d\n", veiculos[i].ano);
+        fprintf(arquivo, "CPF do cliente associado: %s\n\n", veiculos[i].clientePtr->cpf);
+    }
+
     fclose(arquivo);
 }
 
@@ -371,7 +372,7 @@ void menuVeiculos() {
         printf("2 - Atualizar Veiculos\n");
         printf("3 - Listar Veiculos\n");
         printf("4 - Remover Veiculos\n");
-        printf("0 - Voltar\n");
+        printf("0 - Voltar\n> ");
         scanf("%d", &opcao);
         getchar();
 
