@@ -7,6 +7,15 @@ permitindo o cadastro de clientes, veículos, abertura e gerenciamento de ordens
 viço, além da geração de relatórios. O sistema deve armazenar os dados em arquivos,
 garantindo persistência.
 
+## Como compilar: 
+
+```bash
+    
+    gcc -Iinclude -o SistemaOficinaMecanica src/*.c
+    ./SistemaOficinaMecanica
+
+```
+
 ## Descrição Geral
 
 O sistema simulará o funcionamento de uma oficina, onde:
