@@ -17,7 +17,7 @@ int cpf_duplicado(const char *cpf) {
     return 0; // CPF não encontrado
 }
 
-void imprimir_lista(){
+void imprimir_clientes(){
     if (count == 0){
         printf("Nenhum cliente cadastrado\n");
         return;
@@ -205,7 +205,7 @@ int cadastro_clientes() { // funcao para cadastrar os clientes
 
         adiciona_cliente(novoClientePtr->nome, novoClientePtr->cpf, novoClientePtr->telefone);
 
-        printf("Deseja salvar outro cliente? (1 - sim / 2 - nao)\n");
+        printf("Deseja salvar outro cliente? (1 - sim / 0 - nao)\n");
         scanf("%d", &opcao);
         while ((ch = getchar()) != '\n' && ch != EOF); 
 
@@ -235,7 +235,7 @@ void menuClientes() { //funcao menu no arquivo
 
         switch (opcao) {
             case 0:
-                printf("Voltando ao menu principal...\n");
+                printf("\nVoltando ao menu principal...\n");
                 break;
             case 1:
                 cadastro_clientes();
@@ -245,7 +245,7 @@ void menuClientes() { //funcao menu no arquivo
                 salvar_clientes_no_arquivo("data/clientes.txt");
                 break;
             case 3:
-                imprimir_lista();
+                imprimir_clientes();
                 break;
             case 4:
                 remover_cliente_por_cpf();

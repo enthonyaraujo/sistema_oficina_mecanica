@@ -3,15 +3,18 @@
 #include "../include/clientes.h"
 #include "../include/veiculos.h"
 #include "../include/structs.h"
+#include "../include/ordens.h"
 
 int main(){
+    veiculo *lista_veiculos = NULL;
+    int total_veiculos = 0;
 
     int opcao;
 
     do
     {
         printf("=== Sistema de Gerenciamento para Oficina Mecânica ===\n=== Menu ===\n");
-        printf("1-Clientes\n2-Veículos\n3-Ordens de Serviço\n4-Relatórios\n0-Sair\n");
+        printf("1 - Clientes\n2 - Veículos\n3 - Ordens de Serviço\n4 - Relatórios\n0 - Sair\n");
         scanf("%d", &opcao);
 
         switch (opcao)
@@ -26,6 +29,12 @@ int main(){
             menuVeiculos();
             break;
         case 3:
+            total_veiculos = 0;
+            lista_veiculos = carregar_veiculos(&total_veiculos);
+            if (!lista_veiculos){
+                printf("Nenhum veículo cadastrado.\n");
+            }
+            menuOrdens();
             break;
         case 4:
             break;
