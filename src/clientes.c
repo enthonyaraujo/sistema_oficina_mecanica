@@ -166,7 +166,7 @@ void salvar_clientes_no_arquivo(const char *nome_arquivo) { // funcao para escre
 int cadastro_clientes() { // funcao para cadastrar os clientes
     char nome_arquivo[] = "data/clientes.txt"; // nome do arquivo
 
-    carregar_clientes_do_arquivo(nome_arquivo);
+    //carregar_clientes_do_arquivo(nome_arquivo);
     cliente novoCliente;
     cliente *novoClientePtr = &novoCliente;
     
@@ -228,7 +228,7 @@ void menuClientes() { //funcao menu no arquivo
         printf("3 - Listar Clientes\n");
         printf("4 - Remover Cliente\n");
         printf("0 - Voltar\n");
-        printf("Escolha uma opcao: ");
+        printf("Escolha uma opcao:\n> ");
 
         scanf("%d", &opcao);
         while (getchar() != '\n');
