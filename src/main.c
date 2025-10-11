@@ -29,9 +29,7 @@ int main(){
             menuVeiculos();
             break;
         case 3:
-            total_veiculos = 0;
-            lista_veiculos = carregar_veiculos(&total_veiculos);
-            menuOrdens();
+            //menuOrdens();
             break;
         case 4:
             break;
