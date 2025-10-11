@@ -11,8 +11,8 @@ garantindo persistência.
 
 ```bash
     
-    gcc -Iinclude -o SistemaOficinaMecanica src/*.c
-    ./SistemaOficinaMecanica
+gcc -Iinclude -o SistemaOficinaMecanica src/*.c
+./SistemaOficinaMecanica
 
 ```
 
