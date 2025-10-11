@@ -4,7 +4,37 @@
 #include "../include/structs.h"
 #include "../include/clientes.h"
 
-void menuVeiculos() {
+void cadastro_veiculos(){
+    char nome_arquivo = "data/veiculos.txt";
+    int opcao;
+    char cpf_busca;
+
+    veiculo novoVeiculo;
+    veiculo *novoVeiculoPtr = &novoVeiculo;
+
+
+    do
+    {
+        
+        printf("Digite a placa do veiculo: \n");
+        fgets(novoVeiculoPtr->placa, sizeof(novoVeiculoPtr), stdin);
+
+        printf("Digite o modelo do veiculo: \n");
+        fgets(novoVeiculoPtr->modelo, sizeof(novoVeiculoPtr->modelo), stdin);
+
+        printf("Digite o ano do veiculo: \n");
+        fgets(novoVeiculoPtr->ano, sizeof(novoVeiculoPtr->ano), stdin);
+
+        printf("Digite o CPF do Cliente: \n");
+        fgets(novoVeiculoPtr->clientePtr, sizeof(novoVeiculoPtr->clientePtr), stdin); //quero associar a um cliente ja cadastrado via cpf
+
+        
+        printf("Deseja salvar o carro? (1 - Sim / 2 - Nao)");
+    } while (opcao == 1);
+    
+}
+
+int main() { // void menu_veiculos
 
     int opcao;
 

@@ -79,7 +79,6 @@ void remover_cliente_por_cpf() {
     printf("Cliente removido com sucesso.\n");
 }
 
-
 void atualizar_cliente() {
     if (count == 0) {
         printf("Nenhum cliente cadastrado.\n");
@@ -89,6 +88,11 @@ void atualizar_cliente() {
     char cpf_busca[20];
     printf("Digite o CPF do cliente que deseja atualizar: ");
     fgets(cpf_busca, sizeof(cpf_busca), stdin);
+    if (strlen(cpf_busca) != 11)
+    {
+        return;    
+    }
+    
     cpf_busca[strcspn(cpf_busca, "\n")] = 0;
 
     for (int i = 0; i < count; i++) {
@@ -108,7 +112,6 @@ void atualizar_cliente() {
 
     printf("Cliente com CPF %s não encontrado.\n", cpf_busca);
 }
-
 
 void adiciona_cliente(const char *nome, const char *cpf, const char *telefone) { // funcao para adicionar cliente, recebe strings para adicao na lista de clientes
     lista = realloc(lista, sizeof(cliente) * (count + 1));  // count + 1 clientes (para nao precisar definir um valor fixo do tamanho da lista)
@@ -180,6 +183,12 @@ int cadastro_clientes() { // funcao para cadastrar os clientes
             printf("Digite o CPF: \n");
             fgets(novoClientePtr->cpf, sizeof(novoClientePtr->cpf), stdin);
             novoClientePtr->cpf[strcspn(novoClientePtr->cpf, "\n")] = 0;
+            if (strlen(novoClientePtr->cpf) != 11)
+            {
+                printf("O CPF deve contem 11 digitos\n");
+                continue;   
+            }
+    
 
             if (cpf_duplicado(novoClientePtr->cpf)) {
                 printf("CPF já cadastrado. Digite outro CPF.\n");
@@ -248,5 +257,5 @@ void menuClientes() { //funcao menu no arquivo
         }
 
     } while (opcao != 0);
-    free(lista);
+    
 }

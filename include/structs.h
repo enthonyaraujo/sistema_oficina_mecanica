@@ -13,7 +13,7 @@ typedef struct
     char placa[7];
     char modelo[50];
     int ano;
-    char *clientePtr;
+    cliente *clientePtr;
 } veiculo;
 
 typedef enum{
