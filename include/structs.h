@@ -10,7 +10,7 @@ typedef struct
 
 typedef struct 
 {
-    char placa[7];
+    char placa[10];
     char modelo[50];
     int ano;
     cliente *clientePtr;
@@ -24,12 +24,18 @@ typedef enum{
 } statusOrdem;
 
 typedef struct {
+    int dia;
+    int mes;
+    int ano;
+} data;
+
+typedef struct {
     int idOrdem;               
     veiculo *veiculo;          
     char dataEntrada[11];      
     char descricaoProblema[256]; 
     statusOrdem status;
-} OrdemServico;        
+} ordemServico;        
 
 #endif
 
