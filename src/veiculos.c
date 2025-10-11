@@ -367,7 +367,7 @@ void menuVeiculos() {
 
     int opcao;
     do {
-        printf("\n== Menu de Veiculos ==\n");
+        printf("\n== MENU DE VEICULOS ==\n");
         printf("1 - Cadastro de Veiculos\n");
         printf("2 - Atualizar Veiculos\n");
         printf("3 - Listar Veiculos\n");

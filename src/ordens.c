@@ -38,65 +38,6 @@ void listar_todas(const ordemServico *ordens, int total) {
     }
 }
 
-void listar_por_cliente(const ordemServico *ordens, int total, const char *cpf) {
-    printf("\n=== ORDENS DO CLIENTE CPF %s ===\n", cpf);
-    int encontrou = 0;
-
-    for (int i = 0; i < total; i++) {
-        if (ordens[i].veiculo && ordens[i].veiculo->clientePtr &&
-            strcmp(ordens[i].veiculo->clientePtr->cpf, cpf) == 0) {
-            
-            printf("ID: %d | Veiculo: %s | Status: %s\n",
-                   ordens[i].idOrdem,
-                   ordens[i].veiculo->placa,
-                   status_para_string(ordens[i].status));
-            encontrou = 1;
-        }
-    }
-
-    if (!encontrou)
-        printf("Nenhuma ordem encontrada para esse cliente.\n");
-}
-
-void listar_por_veiculo(const ordemServico *ordens, int total, const char *placa) {
-    printf("\n=== ORDENS DO VEICULO %s ===\n", placa);
-    int encontrou = 0;
-
-    for (int i = 0; i < total; i++) {
-        if (ordens[i].veiculo && strcmp(ordens[i].veiculo->placa, placa) == 0) {
-            printf("ID: %d | Cliente: %s | Status: %s\n",
-                   ordens[i].idOrdem,
-                   ordens[i].veiculo->clientePtr ? ordens[i].veiculo->clientePtr->nome : "Desconhecido",
-                   status_para_string(ordens[i].status));
-            encontrou = 1;
-        }
-    }
-
-    if (!encontrou)
-        printf("Nenhuma ordem encontrada para esse veiculo.\n");
-}
-
-void listar_por_status(const ordemServico *ordens, int total, statusOrdem status) {
-    printf("\n=== ORDENS COM STATUS: %s ===\n", status_para_string(status));
-    int encontrou = 0;
-
-    for (int i = 0; i < total; i++) {
-        if (ordens[i].status == status) {
-            printf("ID: %d | Placa: %s | Cliente: %s\n",
-                   ordens[i].idOrdem,
-                   ordens[i].veiculo ? ordens[i].veiculo->placa : "Sem veiculo",
-                   ordens[i].veiculo && ordens[i].veiculo->clientePtr
-                       ? ordens[i].veiculo->clientePtr->nome
-                       : "Desconhecido");
-            encontrou = 1;
-        }
-    }
-
-    if (!encontrou)
-        printf("Nenhuma ordem com esse status.\n");
-}
-
-
 ordemServico *carregar_ordens_de_arquivo(int *total, const char *arquivo, veiculo *veiculos, int totalVeiculos) {
     FILE *file = fopen(arquivo, "r");
     if (!file) {
@@ -118,13 +59,20 @@ ordemServico *carregar_ordens_de_arquivo(int *total, const char *arquivo, veicul
                   temp.descricaoProblema,
                   statusTmp) == 5) {
 
-        // Encontra o veículo correspondente pela placa
+        // 🩵 Tenta associar o veículo certo pela placa
         temp.veiculo = NULL;
         for (int j = 0; j < totalVeiculos; j++) {
             if (strcmp(veiculos[j].placa, placaTmp) == 0) {
                 temp.veiculo = &veiculos[j];
                 break;
             }
+        }
+
+        // Se não encontrou, cria um veículo "fantasma" temporário
+        if (!temp.veiculo) {
+            static veiculo veiculoFaltante;
+            strcpy(veiculoFaltante.placa, placaTmp);
+            temp.veiculo = &veiculoFaltante;
         }
 
         temp.status = string_para_status(statusTmp);
@@ -268,9 +216,6 @@ void menuOrdens() {
         printf("2. Atualizar ordem\n");
         printf("3. Encerrar ordem\n");
         printf("4. Listar todas\n");
-        printf("5. Listar por cliente\n");
-        printf("6. Listar por veiculo\n");
-        printf("7. Listar por status\n");
         printf("0. Voltar\n> ");
         scanf("%d", &opc);
         getchar();
@@ -291,30 +236,6 @@ void menuOrdens() {
             case 4:
                 listar_todas(ordens, totalOrdens);
                 break;
-
-            case 5: {
-                char cpf[20];
-                printf("CPF do cliente: ");
-                scanf(" %19[^\n]", cpf);
-                listar_por_cliente(ordens, totalOrdens, cpf);
-                break;
-            }
-
-            case 6: {
-                char placa[10];
-                printf("Placa do veiculo: ");
-                scanf(" %9[^\n]", placa);
-                listar_por_veiculo(ordens, totalOrdens, placa);
-                break;
-            }
-
-            case 7: {
-                int st;
-                printf("1. Aguardando avaliacao\n2. Em reparo\n3. Finalizado\n4. Entregue\n> ");
-                scanf("%d", &st);
-                listar_por_status(ordens, totalOrdens, st - 1);
-                break;
-            }
         }
     } while (opc != 0);
 

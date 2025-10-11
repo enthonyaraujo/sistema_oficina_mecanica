@@ -2,6 +2,9 @@
 #define ORDENS_H
 
 #include "structs.h"
+#include "veiculos.h"
+
+const char* status_para_string(statusOrdem s); 
 
 ordemServico *carregar_ordens_de_arquivo(int *total, const char *arquivo, veiculo *veiculos, int totalVeiculos);
 

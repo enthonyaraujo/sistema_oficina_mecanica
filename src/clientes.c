@@ -222,7 +222,7 @@ void menuClientes() { //funcao menu no arquivo
     int opcao;
 
     do {
-        printf("\n=== Menu de Clientes ===\n");
+        printf("\n=== MENU DE CLIENTES ===\n");
         printf("1 - Cadastrar Cliente\n");
         printf("2 - Atualizar Cliente\n");
         printf("3 - Listar Clientes\n");
