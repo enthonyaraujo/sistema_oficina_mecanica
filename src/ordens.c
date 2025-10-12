@@ -3,12 +3,13 @@
 #include <string.h>
 #include "../include/ordens.h"
 #include "../include/structs.h"
-#include "../include/veiculos.h"
+#include "../include/veiculos.h" 
+#include "../include/clientes.h" 
 
 const char* status_para_string(statusOrdem s) {
     switch (s) {
-        case AGUARDANDO_AVALIACAO: return "Aguardando avaliacao";
-        case EM_REPARO: return "Em reparo";
+        case AGUARDANDO_AVALIACAO: return "Aguardando Avaliacao";
+        case EM_REPARO: return "Em Reparo";
         case FINALIZADO: return "Finalizado";
         case ENTREGUE: return "Entregue";
         default: return "Desconhecido";
@@ -16,8 +17,8 @@ const char* status_para_string(statusOrdem s) {
 }
 
 statusOrdem string_para_status(const char *str) {
-    if (strcmp(str, "Aguardando avaliacao") == 0) return AGUARDANDO_AVALIACAO;
-    if (strcmp(str, "Em reparo") == 0) return EM_REPARO;
+    if (strcmp(str, "Aguardando Avaliacao") == 0) return AGUARDANDO_AVALIACAO;
+    if (strcmp(str, "Em Reparo") == 0) return EM_REPARO;
     if (strcmp(str, "Finalizado") == 0) return FINALIZADO;
     if (strcmp(str, "Entregue") == 0) return ENTREGUE;
     return AGUARDANDO_AVALIACAO;
@@ -25,67 +26,57 @@ statusOrdem string_para_status(const char *str) {
 
 void listar_todas(const ordemServico *ordens, int total) {
     if (total == 0) {
-        printf("\nNenhuma ordem cadastrada.\n");
+        printf("\nNenhuma ordem de servico cadastrada.\n");
         return;
     }
-
-    printf("\n=== LISTA DE TODAS AS ORDENS ===\n");
+    printf("\n--- Lista de Todas as Ordens de Servico ---\n");
     for (int i = 0; i < total; i++) {
-        printf("ID: %d | Placa: %s | Status: %s\n",
-               ordens[i].idOrdem,
-               ordens[i].veiculo->placa,
-               status_para_string(ordens[i].status));
+        if (ordens[i].veiculo) { 
+            printf("ID: %-4d | Placa: %-8s | Status: %s\n",
+                   ordens[i].idOrdem,
+                   ordens[i].veiculo->placa,
+                   status_para_string(ordens[i].status));
+        }
     }
 }
 
-ordemServico *carregar_ordens_de_arquivo(int *total, const char *arquivo, veiculo *veiculos, int totalVeiculos) {
+ordemServico *carregar_ordens_de_arquivo(int *total_ptr, const char *arquivo, veiculo *lista_veiculos, int total_veiculos) {
     FILE *file = fopen(arquivo, "r");
     if (!file) {
-        *total = 0;
+        *total_ptr = 0;
         return NULL;
     }
 
-    ordemServico temp;
     ordemServico *ordens = NULL;
-    *total = 0;
-
-    char placaTmp[10];
-    char statusTmp[50];
+    *total_ptr = 0;
+    ordemServico temp;
+    char placaTmp[10], statusTmp[50];
 
     while (fscanf(file, "%d;%9[^;];%19[^;];%255[^;];%49[^\n]\n",
-                  &temp.idOrdem,
-                  placaTmp,
-                  temp.dataEntrada,
-                  temp.descricaoProblema,
-                  statusTmp) == 5) {
-
-        // 🩵 Tenta associar o veículo certo pela placa
-        temp.veiculo = NULL;
-        for (int j = 0; j < totalVeiculos; j++) {
-            if (strcmp(veiculos[j].placa, placaTmp) == 0) {
-                temp.veiculo = &veiculos[j];
+                  &temp.idOrdem, placaTmp, temp.dataEntrada, temp.descricaoProblema, statusTmp) == 5) {
+        
+        temp.veiculo = NULL; 
+        for (int j = 0; j < total_veiculos; j++) {
+            if (strcmp(lista_veiculos[j].placa, placaTmp) == 0) {
+                temp.veiculo = &lista_veiculos[j];
                 break;
             }
         }
 
-        // Se não encontrou, cria um veículo "fantasma" temporário
         if (!temp.veiculo) {
-            static veiculo veiculoFaltante;
-            strcpy(veiculoFaltante.placa, placaTmp);
-            temp.veiculo = &veiculoFaltante;
+            printf("Aviso: Veiculo com placa %s nao encontrado. Ordem de servico ID %d nao pode ser carregada corretamente.\n", placaTmp, temp.idOrdem);
+            continue; 
         }
 
         temp.status = string_para_status(statusTmp);
-
-        (*total)++;
-        ordens = realloc(ordens, (*total) * sizeof(ordemServico));
-        ordens[*total - 1] = temp;
+        
+        (*total_ptr)++;
+        ordens = realloc(ordens, (*total_ptr) * sizeof(ordemServico));
+        ordens[*total_ptr - 1] = temp;
     }
-
     fclose(file);
     return ordens;
 }
-
 
 void salvar_ordens_em_arquivo(const ordemServico *ordens, int total, const char *arquivo) {
     FILE *file = fopen(arquivo, "w");
@@ -93,152 +84,126 @@ void salvar_ordens_em_arquivo(const ordemServico *ordens, int total, const char 
         printf("Erro ao salvar arquivo de ordens.\n");
         return;
     }
-
     for (int i = 0; i < total; i++) {
-        fprintf(file, "%d;%s;%s;%s;%s\n",
-                ordens[i].idOrdem,
-                ordens[i].veiculo->placa,
-                ordens[i].dataEntrada,
-                ordens[i].descricaoProblema,
-                status_para_string(ordens[i].status));
+        if (ordens[i].veiculo) {
+            fprintf(file, "%d;%s;%s;%s;%s\n",
+                    ordens[i].idOrdem,
+                    ordens[i].veiculo->placa,
+                    ordens[i].dataEntrada,
+                    ordens[i].descricaoProblema,
+                    status_para_string(ordens[i].status));
+        }
     }
-
     fclose(file);
 }
 
 
-void abrir_ordem(ordemServico **ordens, int *total, veiculo *veiculos, int totalVeiculos) {
-    if (totalVeiculos == 0) {
-        printf("Nenhum veiculo cadastrado!\n");
+
+void abrir_ordem(ordemServico **ordens_ptr, int *total_ptr, veiculo *lista_veiculos, int total_veiculos) {
+    if (total_veiculos == 0) {
+        printf("\nErro: Nao ha veiculos cadastrados. Cadastre um veiculo primeiro.\n");
         return;
     }
 
     ordemServico nova;
-    nova.idOrdem = (*total == 0) ? 1 : (*ordens)[*total - 1].idOrdem + 1;
+    nova.idOrdem = (*total_ptr == 0) ? 1 : (*ordens_ptr)[*total_ptr - 1].idOrdem + 1;
 
     char placaBusca[10];
-    printf("\n=== ABRIR NOVA ORDEM ===\n");
-    printf("Placa do veiculo: ");
-    scanf(" %9[^\n]", placaBusca);
+    printf("\n=== ABRIR NOVA ORDEM DE SERVICO ===\n");
+    printf("Digite a placa do veiculo: ");
+    fgets(placaBusca, sizeof(placaBusca), stdin);
+    placaBusca[strcspn(placaBusca, "\n")] = 0;
 
     veiculo *encontrado = NULL;
-    for (int i = 0; i < totalVeiculos; i++) {
-        if (strcmp(veiculos[i].placa, placaBusca) == 0) {
-            encontrado = &veiculos[i];
+    for (int i = 0; i < total_veiculos; i++) {
+        if (strcasecmp(lista_veiculos[i].placa, placaBusca) == 0) {
+            encontrado = &lista_veiculos[i];
             break;
         }
     }
 
     if (!encontrado) {
-        printf("Veiculo nao encontrado.\n");
+        printf("Erro: Veiculo com placa %s nao encontrado.\n", placaBusca);
         return;
     }
 
     nova.veiculo = encontrado;
 
     printf("Data de entrada (dd/mm/aaaa): ");
-    scanf(" %19[^\n]", nova.dataEntrada);
+    fgets(nova.dataEntrada, sizeof(nova.dataEntrada), stdin);
+    nova.dataEntrada[strcspn(nova.dataEntrada, "\n")] = 0;
+
     printf("Descricao do problema: ");
-    scanf(" %255[^\n]", nova.descricaoProblema);
+    fgets(nova.descricaoProblema, sizeof(nova.descricaoProblema), stdin);
+    nova.descricaoProblema[strcspn(nova.descricaoProblema, "\n")] = 0;
+    
     nova.status = AGUARDANDO_AVALIACAO;
 
-    (*total)++;
-    *ordens = realloc(*ordens, (*total) * sizeof(ordemServico));
-    (*ordens)[*total - 1] = nova;
+    (*total_ptr)++;
+    *ordens_ptr = realloc(*ordens_ptr, (*total_ptr) * sizeof(ordemServico));
+    (*ordens_ptr)[*total_ptr - 1] = nova;
 
-    salvar_ordens_em_arquivo(*ordens, *total, "data/ordens.txt");
-    printf("Ordem aberta com sucesso (ID %d)\n", nova.idOrdem);
+    printf("Ordem de servico aberta com sucesso (ID %d) para o veiculo %s.\n", nova.idOrdem, nova.veiculo->placa);
 }
-
 
 void atualizar_ordem(ordemServico *ordens, int total) {
     if (total == 0) {
         printf("Nenhuma ordem cadastrada.\n");
         return;
     }
-
-    int id;
-    printf("\nDigite o ID da ordem: ");
+    int id, opc;
+    printf("\nDigite o ID da ordem para atualizar: ");
     scanf("%d", &id);
-
+    getchar(); 
     for (int i = 0; i < total; i++) {
         if (ordens[i].idOrdem == id) {
             printf("Status atual: %s\n", status_para_string(ordens[i].status));
             printf("Selecione novo status:\n");
-            printf("1. Aguardando avaliacao\n2. Em reparo\n3. Finalizado\n4. Entregue\n> ");
-
-            int opc;
+            printf("1. Aguardando Avaliacao\n2. Em Reparo\n3. Finalizado\n4. Entregue\n> ");
             scanf("%d", &opc);
-            ordens[i].status = (opc - 1);
-            salvar_ordens_em_arquivo(ordens, total, "data/ordens.txt");
-            printf("Ordem atualizada!\n");
+            getchar(); // Limpa o buffer de entrada
+            
+            if (opc >= 1 && opc <= 4) {
+                ordens[i].status = (statusOrdem)(opc - 1);
+                printf("Ordem atualizada!\n");
+            } else {
+                printf("Opcao de status invalida.\n");
+            }
             return;
         }
     }
-    printf("Ordem nao encontrada.\n");
-}
-
-void encerrar_ordem(ordemServico *ordens, int total) {
-    if (total == 0) {
-        printf("Nenhuma ordem cadastrada.\n");
-        return;
-    }
-
-    int id;
-    printf("Digite o ID da ordem para encerrar: ");
-    scanf("%d", &id);
-
-    for (int i = 0; i < total; i++) {
-        if (ordens[i].idOrdem == id) {
-            ordens[i].status = ENTREGUE;
-            salvar_ordens_em_arquivo(ordens, total, "data/ordens.txt");
-            printf("Ordem encerrada com sucesso!\n");
-            return;
-        }
-    }
-    printf("Ordem nao encontrada.\n");
+    printf("Ordem com ID %d nao encontrada.\n", id);
 }
 
 
-void menuOrdens() {
-    ordemServico *ordens = NULL;
-    int totalOrdens = 0;
-    veiculo *veiculos = NULL; 
-    int totalVeiculos = 0;
-
-    veiculos = carregar_veiculos(&totalVeiculos);
-    ordens = carregar_ordens_de_arquivo(&totalOrdens, "data/ordens.txt", veiculos, totalVeiculos);
-
+void menuOrdens(ordemServico **ordens_ptr, int *totalOrdens_ptr, veiculo *lista_veiculos, int total_veiculos) {
+    
     int opc;
     do {
-        printf("\n===== MENU DE ORDENS =====\n");
+        printf("\n===== MENU DE ORDENS DE SERVICO =====\n");
         printf("1. Abrir nova ordem\n");
-        printf("2. Atualizar ordem\n");
-        printf("3. Encerrar ordem\n");
-        printf("4. Listar todas\n");
-        printf("0. Voltar\n> ");
+        printf("2. Atualizar status da ordem\n");
+        printf("3. Listar todas as ordens\n");
+        printf("0. Voltar ao Menu Principal\n> ");
         scanf("%d", &opc);
-        getchar();
+        getchar(); // Limpa o buffer de entrada
 
         switch (opc) {
             case 1:
-                abrir_ordem(&ordens, &totalOrdens, veiculos, totalVeiculos);
+                abrir_ordem(ordens_ptr, totalOrdens_ptr, lista_veiculos, total_veiculos);
                 break;
-
             case 2:
-                atualizar_ordem(ordens, totalOrdens);
+                atualizar_ordem(*ordens_ptr, *totalOrdens_ptr);
                 break;
-
             case 3:
-                encerrar_ordem(ordens, totalOrdens);
+                listar_todas(*ordens_ptr, *totalOrdens_ptr);
                 break;
-
-            case 4:
-                listar_todas(ordens, totalOrdens);
+            case 0:
+                printf("\nVoltando ao menu principal...\n");
+                break;
+            default:
+                printf("Opcao invalida. Tente novamente.\n");
                 break;
         }
     } while (opc != 0);
-
-    salvar_ordens_em_arquivo(ordens, totalOrdens, "data/ordens.txt");
-    free(ordens);
 }

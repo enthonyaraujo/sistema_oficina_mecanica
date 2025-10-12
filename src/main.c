@@ -7,14 +7,18 @@
 #include "../include/relatorios.h"
 
 int main() {
+
+    cliente *lista_clientes = NULL;
+    int total_clientes = 0;
+
     veiculo *lista_veiculos = NULL;
     int total_veiculos = 0;
 
     ordemServico *ordens = NULL;
     int total_ordens = 0;
 
-    
-    lista_veiculos = carregar_veiculos(&total_veiculos);
+    lista_clientes = carregar_clientes_do_arquivo(&total_clientes, "data/clientes.txt");
+    lista_veiculos = carregar_veiculos(&total_veiculos, lista_clientes, total_clientes);
     ordens = carregar_ordens_de_arquivo(&total_ordens, "data/ordens.txt", lista_veiculos, total_veiculos);
 
     int opcao;
@@ -22,9 +26,9 @@ int main() {
         printf("\n=== SISTEMA DE GERENCIAMENTE PARA OFICINA MECANICA ===\n");
         printf("=== MENU PRINCIAL ===\n");
         printf("1 - Clientes\n");
-        printf("2 - Veículos\n");
-        printf("3 - Ordens de Serviço\n");
-        printf("4 - Relatórios\n");
+        printf("2 - Veiculos\n");
+        printf("3 - Ordens de Servico\n");
+        printf("4 - Relatorios\n");
         printf("0 - Sair\n> ");
         scanf("%d", &opcao);
         getchar();
@@ -35,32 +39,33 @@ int main() {
                 break;
 
             case 1:
-                menuClientes();
+                menuClientes(&lista_clientes, &total_clientes);
                 break;
 
             case 2:
-                menuVeiculos();
+                menuVeiculos(&lista_veiculos, &total_veiculos, lista_clientes,total_clientes);
                 break;
 
             case 3:
-                menuOrdens();
+                menuOrdens(&ordens, &total_ordens, lista_veiculos, total_veiculos);
                 break;
 
             case 4:
-                // 🔹 Passa as listas já carregadas
+                //  Passa as listas já carregadas
                 menuRelatorios(ordens, total_ordens, lista_veiculos, total_veiculos);
                 break;
 
             default:
-                printf("Opção inválida.\n");
+                printf("Opcao invalida.\n");
                 break;
         }
     } while (opcao != 0);
 
-    
+    salvar_clientes_no_arquivo(lista_clientes, total_clientes, "data/clientes.txt");
+    salvar_todos_veiculos(lista_veiculos, total_veiculos, "data/veiculos.txt");
     salvar_ordens_em_arquivo(ordens, total_ordens, "data/ordens.txt");
 
-    
+    free(lista_clientes);
     free(ordens);
     free(lista_veiculos);
 

@@ -15,7 +15,7 @@ int validarcpf(int cpf[11]){
         }
     }            
     if (todos_iguais) {
-        printf("CPF inválido (todos os dígitos iguais)\n");
+        printf("CPF invalido (todos os digitos iguais)\n");
         return 0;
     }
     else{

@@ -2,17 +2,20 @@
 #define CLIENTES_H
 #include "structs.h"
 
-cliente* buscar_cliente_por_cpf(const char *cpf_procurado);
+void menuClientes(cliente **lista_ptr, int *count_ptr);
+cliente* buscar_cliente_na_lista(const char* cpf, const cliente* lista, int count);
 
-void menuClientes();
-void adiciona_cliente(const char *nome, const char *cpf, const char *telefone);
-void atualizar_cliente();
-void remover_cliente_por_cpf();
-int cpf_duplicado(const char *cpf);
-void imprimir_lista();
-void carregar_clientes_do_arquivo(const char *nome_arquivo);
-void salvar_clientes_no_arquivo(const char *nome_arquivo);
+cliente* carregar_clientes_do_arquivo(int *count_ptr, const char *nome_arquivo);
+void salvar_clientes_no_arquivo(const cliente *lista, int count, const char *nome_arquivo);
 
 
-#endif 
+void adiciona_cliente(cliente **lista_ptr, int *count_ptr, const cliente *novoCliente);
+void cadastro_clientes(cliente **lista_ptr, int *count_ptr);
+void imprimir_clientes(const cliente *lista, int count);
+void atualizar_cliente(cliente *lista, int count);
+void remover_cliente_por_cpf(cliente **lista_ptr, int *count_ptr);
 
+int cpf_duplicado(const char *cpf, const cliente *lista, int count);
+cliente* buscar_cliente_na_lista(const char* cpf, const cliente* lista, int count);
+
+#endif

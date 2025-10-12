@@ -3,20 +3,18 @@
 #include "structs.h"
 
 
-extern veiculo *lista_veiculos;
-extern int total_veiculos;
+void menuVeiculos(veiculo **lista_veiculos_ptr, int *total_veiculos_ptr, cliente *lista_clientes, int total_clientes);
 
 
-veiculo* carregar_veiculos(int *total);
-veiculo* buscar_veiculo_por_placa(veiculo *veiculos, int total, const char *placa);
+veiculo* carregar_veiculos(int *total, cliente *lista_clientes, int total_clientes);
 
-void salvar_todos_veiculos(veiculo *veiculos, int total);
-void cadastro_veiculos(veiculo **veiculos, int *total);
-void imprimir_veiculos(veiculo *veiculos, int total);
 
+void salvar_todos_veiculos(const veiculo *veiculos, int total, const char *nome_arquivo);
+
+
+void cadastro_veiculos(veiculo **veiculos, int *totalVeiculos, cliente *lista_clientes, int total_clientes);
+void atualizar_veiculo(veiculo *veiculos, int totalVeiculos, cliente *lista_clientes, int total_clientes);
 void remover_veiculo(veiculo **veiculos, int *total);
-void atualizar_veiculo(veiculo *veiculos, int total);
+void imprimir_veiculos(const veiculo *veiculos, int total);
 
-void menuVeiculos();
-
-#endif 
+#endif

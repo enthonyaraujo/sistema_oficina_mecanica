@@ -7,12 +7,12 @@
 #include "../include/ordens.h"
 
 void relatorio_historico_veiculo(const ordemServico *ordens, int totalOrdens, const char *placa) {
-    printf("\n=== HISTÓRICO DO VEÍCULO %s ===\n", placa);
+    printf("\n=== HISTORICO DO VEICULO %s ===\n", placa);
     int encontrou = 0;
 
     for (int i = 0; i < totalOrdens; i++) {
         if (ordens[i].veiculo && strcmp(ordens[i].veiculo->placa, placa) == 0) {
-            printf("ID: %d | Data: %s | Descrição: %s | Status: %s\n",
+            printf("ID: %d | Data: %s | Descricão: %s | Status: %s\n",
                    ordens[i].idOrdem,
                    ordens[i].dataEntrada,
                    ordens[i].descricaoProblema,
@@ -22,7 +22,7 @@ void relatorio_historico_veiculo(const ordemServico *ordens, int totalOrdens, co
     }
 
     if (!encontrou)
-        printf("Nenhuma ordem encontrada para este veículo.\n");
+        printf("Nenhuma ordem encontrada para este veiculo.\n");
 }
 void relatorio_ordens_por_dia(const ordemServico *ordens, int totalOrdens, const char *data) {
     printf("\n=== ORDENS ABERTAS EM %s ===\n", data);
@@ -30,7 +30,7 @@ void relatorio_ordens_por_dia(const ordemServico *ordens, int totalOrdens, const
 
     for (int i = 0; i < totalOrdens; i++) {
         if (strcmp(ordens[i].dataEntrada, data) == 0) {
-            printf("ID: %d | Veículo: %s | Status: %s\n",
+            printf("ID: %d | Veiculo: %s | Status: %s\n",
                    ordens[i].idOrdem,
                    ordens[i].veiculo ? ordens[i].veiculo->placa : "Desconhecido",
                    status_para_string(ordens[i].status));
@@ -42,7 +42,7 @@ void relatorio_ordens_por_dia(const ordemServico *ordens, int totalOrdens, const
         printf("Nenhuma ordem aberta nesta data.\n");
 }
 void relatorio_veiculos_por_cliente(const veiculo *veiculos, int totalVeiculos, const char *cpf) {
-    printf("\n=== VEÍCULOS DO CLIENTE CPF %s ===\n", cpf);
+    printf("\n=== VEICULOS DO CLIENTE CPF %s ===\n", cpf);
     int encontrou = 0;
 
     for (int i = 0; i < totalVeiculos; i++) {
@@ -55,7 +55,7 @@ void relatorio_veiculos_por_cliente(const veiculo *veiculos, int totalVeiculos, 
     }
 
     if (!encontrou)
-        printf("Nenhum veículo encontrado para este cliente.\n");
+        printf("Nenhum veiculo encontrado para este cliente.\n");
 }
 void relatorio_ordens_por_status(const ordemServico *ordens, int totalOrdens) {
     int contA = 0, contR = 0, contF = 0, contE = 0;
@@ -69,7 +69,7 @@ void relatorio_ordens_por_status(const ordemServico *ordens, int totalOrdens) {
         }
     }
 
-    printf("\n=== RELATÓRIO DE ORDENS POR STATUS ===\n");
+    printf("\n=== RELATORIO DE ORDENS POR STATUS ===\n");
     printf("Aguardando avaliacao: %d\n", contA);
     printf("Em reparo: %d\n", contR);
     printf("Finalizado: %d\n", contF);
@@ -125,10 +125,10 @@ void relatorio_clientes_recorrentes(const ordemServico *ordens, int totalOrdens)
 void menuRelatorios(ordemServico *ordens, int totalOrdens, veiculo *veiculos, int totalVeiculos) {
     int opc;
     do {
-        printf("\n===== MENU DE RELATÓRIOS =====\n");
-        printf("1. Histórico de serviços de um veículo\n");
-        printf("2. Ordens abertas em um dia específico\n");
-        printf("3. Listar veículos de um cliente\n");
+        printf("\n===== MENU DE RELATORIOS =====\n");
+        printf("1. Historico de servicos de um veiculo\n");
+        printf("2. Ordens abertas em um dia especifico\n");
+        printf("3. Listar veiculos de um cliente\n");
         printf("4. Ordens por status\n");
         printf("5. Clientes mais recorrentes\n");
         printf("0. Voltar\n> ");

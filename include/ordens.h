@@ -20,6 +20,6 @@ void listar_por_cliente(const ordemServico *ordens, int total, const char *cpf);
 void listar_por_veiculo(const ordemServico *ordens, int total, const char *placa);
 void listar_por_status(const ordemServico *ordens, int total, statusOrdem status);
 
-void menuOrdens();
+void menuOrdens(ordemServico **ordens_ptr, int *totalOrdens_ptr, veiculo *lista_veiculos, int total_veiculos);
 
 #endif

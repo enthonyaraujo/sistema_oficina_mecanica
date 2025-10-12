@@ -5,10 +5,9 @@
 #include "../include/structs.h"
 #include "../include/validar_cpf.h"
 
-cliente *lista = NULL; //ponteiro para lista, inicialmente sem memoria alocada
-int count = 0; // contador 
 
-int cpf_duplicado(const char *cpf) {
+
+int cpf_duplicado(const char *cpf, const cliente *lista, int count) {
     for (int i = 0; i < count; i++) {
         if (strcmp(lista[i].cpf, cpf) == 0) {
             return 1; // CPF já existe
@@ -17,25 +16,42 @@ int cpf_duplicado(const char *cpf) {
     return 0; // CPF não encontrado
 }
 
-void imprimir_clientes(){
-    if (count == 0){
-        printf("Nenhum cliente cadastrado\n");
+void imprimir_clientes(const cliente *lista, int count) {
+    if (count == 0) {
+        printf("\nNenhum cliente cadastrado.\n");
         return;
     }
-    printf("Lista de clientes cadastrados: \n");
-    for (int i = 0; i < count; i++)
-    {
-        printf("Nome: %s \n",lista[i].nome);
-        printf("CPF: %s \n",lista[i].cpf);
-        printf("Telefone: %s \n",lista[i].telefone);
-        printf("\n");
+    printf("\n--- Lista de Clientes Cadastrados ---\n");
+    for (int i = 0; i < count; i++) {
+        printf("Nome:     %s\n", lista[i].nome);
+        printf("CPF:      %s\n", lista[i].cpf);
+        printf("Telefone: %s\n", lista[i].telefone);
     }
-    
 }
 
-void remover_cliente_por_cpf() {
-    if (count == 0) {
-        printf("Nenhum cliente cadastrado.\n");
+cliente* buscar_cliente_na_lista(const char* cpf, const cliente* lista, int count) {
+    for (int i = 0; i < count; i++) {
+        if (strcmp(lista[i].cpf, cpf) == 0) {
+          
+            return (cliente*)&lista[i]; 
+        }
+    }
+    return NULL; 
+}
+
+void adiciona_cliente(cliente **lista_ptr, int *count_ptr, const cliente *novoCliente) {
+    *lista_ptr = realloc(*lista_ptr, sizeof(cliente) * (*count_ptr + 1));
+    if (*lista_ptr == NULL) {
+        perror("Falha ao alocar memoria para novo cliente");
+        exit(1);
+    }
+    (*lista_ptr)[*count_ptr] = *novoCliente;
+    (*count_ptr)++;
+}
+
+void remover_cliente_por_cpf(cliente **lista_ptr, int *count_ptr) {
+    if (*count_ptr == 0) {
+        printf("Nenhum cliente cadastrado para remover.\n");
         return;
     }
 
@@ -43,93 +59,82 @@ void remover_cliente_por_cpf() {
     printf("Digite o CPF do cliente que deseja remover: ");
     fgets(cpf_busca, sizeof(cpf_busca), stdin);
     cpf_busca[strcspn(cpf_busca, "\n")] = 0;
-    
-    if (cpf_duplicado(cpf_busca))
-    {
-        printf("\n");
-    }
-
 
     int pos = -1;
-    for (int i = 0; i < count; i++) {
-        if (strcmp(lista[i].cpf, cpf_busca) == 0) {
+    for (int i = 0; i < *count_ptr; i++) {
+        if (strcmp((*lista_ptr)[i].cpf, cpf_busca) == 0) {
             pos = i;
             break;
         }
     }
 
     if (pos == -1) {
-        printf("Cliente com CPF %s não encontrado.\n", cpf_busca);
+        printf("Cliente com CPF %s nao encontrado.\n", cpf_busca);
         return;
     }
 
-    for (int i = pos; i < count -1; i++) {
-        lista[i] = lista[i + 1];
+   
+    for (int i = pos; i < *count_ptr - 1; i++) {
+        (*lista_ptr)[i] = (*lista_ptr)[i + 1];
     }
-    count--;
+    (*count_ptr)--;
 
-    if (count > 0) {
-        cliente *temp = realloc(lista, sizeof(cliente) * count);
-        if (temp != NULL) lista = temp;
+    if (*count_ptr > 0) {
+        cliente *temp = realloc(*lista_ptr, sizeof(cliente) * (*count_ptr));
+        if (temp != NULL) {
+            *lista_ptr = temp;
+        }
     } else {
-        free(lista);
-        lista = NULL;
+        free(*lista_ptr);
+        *lista_ptr = NULL;
     }
-
     printf("Cliente removido com sucesso.\n");
 }
 
-void atualizar_cliente() {
+void atualizar_cliente(cliente *lista, int count) {
     if (count == 0) {
-        printf("Nenhum cliente cadastrado.\n");
+        printf("Nenhum cliente cadastrado para atualizar.\n");
         return;
     }
-
     char cpf_busca[20];
     printf("Digite o CPF do cliente que deseja atualizar: ");
     fgets(cpf_busca, sizeof(cpf_busca), stdin);
-    if (strlen(cpf_busca) != 11)
-    {
-        return;    
-    }
-    
     cpf_busca[strcspn(cpf_busca, "\n")] = 0;
 
     for (int i = 0; i < count; i++) {
         if (strcmp(lista[i].cpf, cpf_busca) == 0) {
-            printf("Cliente encontrado\n" ); //lista[i].nome
-            printf("Digite o novo nome: ");
+            printf("Cliente encontrado: %s\n", lista[i].nome);
+            printf("Digite o novo nome (ou Enter para manter): ");
             char novo_nome[100];
             fgets(novo_nome, sizeof(novo_nome), stdin);
-            novo_nome[strcspn(novo_nome, "\n")] = 0;
-
-            strcpy(lista[i].nome, novo_nome);
-            printf("Nome atualizado com sucesso.\n");
-
+            if (novo_nome[0] != '\n') {
+                novo_nome[strcspn(novo_nome, "\n")] = 0;
+                strcpy(lista[i].nome, novo_nome);
+            }
+            
+            printf("Cliente atualizado com sucesso.\n");
             return;
         }
     }
-
-    printf("Cliente com CPF %s não encontrado.\n", cpf_busca);
+    printf("Cliente com CPF %s nao encontrado.\n", cpf_busca);
 }
 
-void adiciona_cliente(const char *nome, const char *cpf, const char *telefone) { // funcao para adicionar cliente, recebe strings para adicao na lista de clientes
-    lista = realloc(lista, sizeof(cliente) * (count + 1));  // count + 1 clientes (para nao precisar definir um valor fixo do tamanho da lista)
-    strcpy(lista[count].nome, nome); 
-    strcpy(lista[count].cpf, cpf);
-    strcpy(lista[count].telefone, telefone);
-    count++; // incrementa o contador
-}
 
-void carregar_clientes_do_arquivo(const char *nome_arquivo) { // funcao para leitura de clientes (precisamos fazer assim pois nao é possivel usar o append "a")
-    FILE *arquivo = fopen(nome_arquivo, "r"); // abre o arquivo para leitura
-    if (!arquivo) return; // se o comando acima falhar ele retorna
+cliente* carregar_clientes_do_arquivo(int *count_ptr, const char *nome_arquivo) {
+    FILE *arquivo = fopen(nome_arquivo, "r");
+    if (!arquivo) {
+        *count_ptr = 0;
+        return NULL;
+    }
 
+    cliente *lista = NULL;
+    *count_ptr = 0;
+    
     char linha[256];
-    cliente temp; 
+    cliente temp;
     int step = 0;
 
-    while (fgets(linha, sizeof(linha), arquivo)) { // loop para ler o arquivo
+    while (fgets(linha, sizeof(linha), arquivo)) {
         linha[strcspn(linha, "\n")] = 0;
         if (strlen(linha) == 0) continue;
 
@@ -141,20 +146,20 @@ void carregar_clientes_do_arquivo(const char *nome_arquivo) { // funcao para lei
             step = 2;
         } else if (strncmp(linha, "Telefone: ", 10) == 0 && step == 2) {
             strcpy(temp.telefone, linha + 10);
-            adiciona_cliente(temp.nome, temp.cpf, temp.telefone);
+            adiciona_cliente(&lista, count_ptr, &temp);
             step = 0;
         }
     }
     fclose(arquivo);
+    return lista;
 }
 
-void salvar_clientes_no_arquivo(const char *nome_arquivo) { // funcao para escrever o nomes no arquivo
+void salvar_clientes_no_arquivo(const cliente *lista, int count, const char *nome_arquivo) {
     FILE *arquivo = fopen(nome_arquivo, "w");
     if (!arquivo) {
         printf("Erro ao abrir arquivo para salvar\n");
         return;
     }
-
     for (int i = 0; i < count; i++) {
         fprintf(arquivo, "Nome: %s\n", lista[i].nome);
         fprintf(arquivo, "CPF: %s\n", lista[i].cpf);
@@ -163,99 +168,83 @@ void salvar_clientes_no_arquivo(const char *nome_arquivo) { // funcao para escre
     fclose(arquivo);
 }
 
-int cadastro_clientes() { // funcao para cadastrar os clientes
-    char nome_arquivo[] = "data/clientes.txt"; // nome do arquivo
 
-    //carregar_clientes_do_arquivo(nome_arquivo);
+
+void cadastro_clientes(cliente **lista_ptr, int *count_ptr) {
     cliente novoCliente;
-    cliente *novoClientePtr = &novoCliente;
-    
     int opcao, ch;
-
     do {
-        printf("\n== Cadastro de Clientes ==\n");
-
-        printf("Digite o nome: \n");
-        fgets(novoClientePtr->nome, sizeof(novoClientePtr->nome), stdin);
-        novoClientePtr->nome[strcspn(novoClientePtr->nome, "\n")] = 0;
+        printf("\n== Cadastro de Novo Cliente ==\n");
+        printf("Digite o nome: ");
+        fgets(novoCliente.nome, sizeof(novoCliente.nome), stdin);
+        novoCliente.nome[strcspn(novoCliente.nome, "\n")] = 0;
 
         while (1) {
-            printf("Digite o CPF: \n");
-            fgets(novoClientePtr->cpf, sizeof(novoClientePtr->cpf), stdin);
-            novoClientePtr->cpf[strcspn(novoClientePtr->cpf, "\n")] = 0;
-            if (strlen(novoClientePtr->cpf) != 11)
-            {
-                printf("O CPF deve contem 11 digitos\n");
-                continue;   
+            printf("Digite o CPF (11 digitos, sem pontos): ");
+            fgets(novoCliente.cpf, sizeof(novoCliente.cpf), stdin);
+            novoCliente.cpf[strcspn(novoCliente.cpf, "\n")] = 0;
+            
+            if (strlen(novoCliente.cpf) != 11) {
+                printf("Erro: O CPF deve conter exatamente 11 digitos.\n");
+                continue;
             }
-    
-
-            if (cpf_duplicado(novoClientePtr->cpf)) {
-                printf("CPF já cadastrado. Digite outro CPF.\n");
+            
+            if (cpf_duplicado(novoCliente.cpf, *lista_ptr, *count_ptr)) {
+                printf("Erro: CPF ja cadastrado.\n");
             } else {
                 break;
             }
         }
+        
+        ler_cpf(novoCliente.cpf); // Validação do CPF
 
-        ler_cpf(novoClientePtr->cpf);
+        printf("Digite o telefone: ");
+        fgets(novoCliente.telefone, sizeof(novoCliente.telefone), stdin);
+        novoCliente.telefone[strcspn(novoCliente.telefone, "\n")] = 0;
 
-        printf("Digite o número de telefone: \n");
-        fgets(novoClientePtr->telefone, sizeof(novoClientePtr->telefone), stdin);
-        novoClientePtr->telefone[strcspn(novoClientePtr->telefone, "\n")] = 0;
+        
+        adiciona_cliente(lista_ptr, count_ptr, &novoCliente);
+        printf("Cliente '%s' cadastrado com sucesso!\n", novoCliente.nome);
 
-        adiciona_cliente(novoClientePtr->nome, novoClientePtr->cpf, novoClientePtr->telefone);
-
-        printf("Deseja salvar outro cliente? (1 - sim / 0 - nao)\n");
+        printf("\nDeseja cadastrar outro cliente? (1 - Sim / 0 - Nao): ");
         scanf("%d", &opcao);
-        while ((ch = getchar()) != '\n' && ch != EOF); 
+        while ((ch = getchar()) != '\n' && ch != EOF);
 
     } while (opcao == 1);
-
-    salvar_clientes_no_arquivo(nome_arquivo);
-
-    free(lista);
-    return 0;
 }
 
-void menuClientes() { //funcao menu no arquivo
-    carregar_clientes_do_arquivo("data/clientes.txt");
+void menuClientes(cliente **lista_ptr, int *count_ptr) {
     int opcao;
-
     do {
         printf("\n=== MENU DE CLIENTES ===\n");
         printf("1 - Cadastrar Cliente\n");
         printf("2 - Atualizar Cliente\n");
         printf("3 - Listar Clientes\n");
         printf("4 - Remover Cliente\n");
-        printf("0 - Voltar\n");
-        printf("Escolha uma opcao:\n> ");
+        printf("0 - Voltar ao Menu Principal\n");
+        printf("Escolha uma opcao: > ");
 
         scanf("%d", &opcao);
-        while (getchar() != '\n');
-
+        while (getchar() != '\n'); 
         switch (opcao) {
             case 0:
                 printf("\nVoltando ao menu principal...\n");
                 break;
             case 1:
-                cadastro_clientes();
+                cadastro_clientes(lista_ptr, count_ptr);
                 break;
             case 2:
-                atualizar_cliente();
-                salvar_clientes_no_arquivo("data/clientes.txt");
+                atualizar_cliente(*lista_ptr, *count_ptr);
                 break;
             case 3:
-                imprimir_clientes();
+                imprimir_clientes(*lista_ptr, *count_ptr);
                 break;
             case 4:
-                remover_cliente_por_cpf();
-                salvar_clientes_no_arquivo("data/clientes.txt");
+                remover_cliente_por_cpf(lista_ptr, count_ptr);
                 break;
             default:
-                printf("Opção inválida. Tente novamente.\n");
+                printf("Opcao invalida. Tente novamente.\n");
                 break;
         }
-
     } while (opcao != 0);
-    
 }

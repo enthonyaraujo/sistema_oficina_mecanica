@@ -1,0 +1,36 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Project (Windows)",
+            "type": "shell",
+            "command": "gcc.exe",
+            "args": [
+                "-Wall",
+                "-Wextra",
+                "-g3",
+                // Compila TODOS os arquivos .c na pasta src
+                "${workspaceFolder}\\src\\*.c", 
+                "-o",
+                // Salva o resultado em src\output\
+                "${workspaceFolder}\\src\\output\\main.exe"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": false,
+                "clear": true
+            },
+            "detail": "Compila todos os arquivos .c do projeto."
+        }
+    ]
+}
