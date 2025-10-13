@@ -1,4 +1,3 @@
-// Arquivo: veiculos.c (VERSÃO FINAL E CORRIGIDA)
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -190,9 +189,18 @@ void cadastro_veiculos(veiculo **veiculos_ptr, int *total_ptr, cliente *lista_cl
     printf("Digite a placa do veiculo (ex: BRA2E19 ou ABC1234): ");
     fgets(novoVeiculo.placa, sizeof(novoVeiculo.placa), stdin);
     novoVeiculo.placa[strcspn(novoVeiculo.placa, "\n")] = 0;
+
     if (!validar_placa(novoVeiculo.placa)) {
         printf("Erro: Formato de placa invalido.\n");
         return;
+    }
+
+    // Verifica se a placa já existe
+    for (int i = 0; i < *total_ptr; i++) {
+        if (strcasecmp((*veiculos_ptr)[i].placa, novoVeiculo.placa) == 0) {
+            printf("Erro: Veiculo com placa %s ja esta cadastrado.\n", novoVeiculo.placa);
+            return;
+        }
     }
 
     // Entrada do modelo do veículo
@@ -208,7 +216,7 @@ void cadastro_veiculos(veiculo **veiculos_ptr, int *total_ptr, cliente *lista_cl
         printf("Erro: Ano invalido.\n");
         return;
     }
-    
+
     // Entrada do CPF do cliente proprietário
     printf("Digite o CPF do Cliente proprietario: ");
     fgets(cpf_input, sizeof(cpf_input), stdin);
@@ -223,10 +231,17 @@ void cadastro_veiculos(veiculo **veiculos_ptr, int *total_ptr, cliente *lista_cl
     // Adiciona o novo veículo ao vetor dinâmico
     (*total_ptr)++;
     *veiculos_ptr = realloc(*veiculos_ptr, (*total_ptr) * sizeof(veiculo));
+    if (!*veiculos_ptr) {
+        perror("Erro ao alocar memoria para novo veiculo");
+        exit(1);
+    }
+
     (*veiculos_ptr)[*total_ptr - 1] = novoVeiculo;
 
-    printf("Veiculo de placa %s cadastrado com sucesso para o cliente %s.\n", novoVeiculo.placa, novoVeiculo.clientePtr->nome);
+    printf("Veiculo de placa %s cadastrado com sucesso para o cliente %s.\n",
+           novoVeiculo.placa, novoVeiculo.clientePtr->nome);
 }
+
 
 void menuVeiculos(veiculo **lista_veiculos_ptr, int *total_veiculos_ptr, cliente *lista_clientes, int total_clientes) {
     int opcao;
