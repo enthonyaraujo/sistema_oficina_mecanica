@@ -10,6 +10,7 @@ void relatorio_historico_veiculo(const ordemServico *ordens, int totalOrdens, co
     printf("\n=== HISTORICO DO VEICULO %s ===\n", placa);
     int encontrou = 0;
 
+    // Percorre todas as ordens para encontrar as que pertencem ao veículo de placa informada
     for (int i = 0; i < totalOrdens; i++) {
         if (ordens[i].veiculo && strcmp(ordens[i].veiculo->placa, placa) == 0) {
             printf("ID: %d | Data: %s | Descricão: %s | Status: %s\n",
@@ -21,13 +22,16 @@ void relatorio_historico_veiculo(const ordemServico *ordens, int totalOrdens, co
         }
     }
 
+    // Caso nenhuma ordem seja encontrada, informa ao usuário
     if (!encontrou)
         printf("Nenhuma ordem encontrada para este veiculo.\n");
 }
+
 void relatorio_ordens_por_dia(const ordemServico *ordens, int totalOrdens, const char *data) {
     printf("\n=== ORDENS ABERTAS EM %s ===\n", data);
     int encontrou = 0;
 
+    // Percorre todas as ordens para listar as abertas na data informada
     for (int i = 0; i < totalOrdens; i++) {
         if (strcmp(ordens[i].dataEntrada, data) == 0) {
             printf("ID: %d | Veiculo: %s | Status: %s\n",
@@ -38,13 +42,16 @@ void relatorio_ordens_por_dia(const ordemServico *ordens, int totalOrdens, const
         }
     }
 
+    // Caso não exista ordem para essa data, exibe mensagem
     if (!encontrou)
         printf("Nenhuma ordem aberta nesta data.\n");
 }
+
 void relatorio_veiculos_por_cliente(const veiculo *veiculos, int totalVeiculos, const char *cpf) {
     printf("\n=== VEICULOS DO CLIENTE CPF %s ===\n", cpf);
     int encontrou = 0;
 
+    // Percorre todos os veículos e mostra os que pertencem ao cliente informado, via CPF
     for (int i = 0; i < totalVeiculos; i++) {
         if (veiculos[i].clientePtr && strcmp(veiculos[i].clientePtr->cpf, cpf) == 0) {
             printf("Placa: %s | Modelo: %s\n",
@@ -54,12 +61,15 @@ void relatorio_veiculos_por_cliente(const veiculo *veiculos, int totalVeiculos, 
         }
     }
 
+    // Caso não encontre veículos para o cliente, exibe mensagem
     if (!encontrou)
         printf("Nenhum veiculo encontrado para este cliente.\n");
 }
+
 void relatorio_ordens_por_status(const ordemServico *ordens, int totalOrdens) {
     int contA = 0, contR = 0, contF = 0, contE = 0;
 
+    // Conta quantas ordens há em cada status
     for (int i = 0; i < totalOrdens; i++) {
         switch (ordens[i].status) {
             case AGUARDANDO_AVALIACAO: contA++; break;
@@ -69,12 +79,14 @@ void relatorio_ordens_por_status(const ordemServico *ordens, int totalOrdens) {
         }
     }
 
+    // Mostra relatório resumido das quantidades por status
     printf("\n=== RELATORIO DE ORDENS POR STATUS ===\n");
     printf("Aguardando avaliacao: %d\n", contA);
     printf("Em reparo: %d\n", contR);
     printf("Finalizado: %d\n", contF);
     printf("Entregue: %d\n", contE);
 }
+
 void relatorio_clientes_recorrentes(const ordemServico *ordens, int totalOrdens) {
     typedef struct {
         char nome[100];
@@ -85,6 +97,7 @@ void relatorio_clientes_recorrentes(const ordemServico *ordens, int totalOrdens)
     ClienteContador lista[100];
     int total = 0;
 
+    // Soma a quantidade de ordens por cliente de acordo com o CPF
     for (int i = 0; i < totalOrdens; i++) {
         if (!ordens[i].veiculo || !ordens[i].veiculo->clientePtr)
             continue;
@@ -101,6 +114,7 @@ void relatorio_clientes_recorrentes(const ordemServico *ordens, int totalOrdens)
             }
         }
 
+        // Se o cliente ainda não está na lista, adiciona
         if (!achou) {
             strcpy(lista[total].cpf, cpf);
             strcpy(lista[total].nome, nome);
@@ -115,12 +129,12 @@ void relatorio_clientes_recorrentes(const ordemServico *ordens, int totalOrdens)
         return;
     }
 
+    // Exibe todos os clientes recorrentes e o total de ordens de cada
     for (int i = 0; i < total; i++) {
         printf("%s (CPF: %s) — %d ordens\n",
                lista[i].nome, lista[i].cpf, lista[i].qtd);
     }
 }
-
 
 void menuRelatorios(ordemServico *ordens, int totalOrdens, veiculo *veiculos, int totalVeiculos) {
     int opc;
@@ -135,6 +149,7 @@ void menuRelatorios(ordemServico *ordens, int totalOrdens, veiculo *veiculos, in
         scanf("%d", &opc);
         getchar();
 
+        // Direciona cada opção do menu para o relatório correspondente
         switch (opc) {
             case 1: {
                 char placa[10];
@@ -166,5 +181,3 @@ void menuRelatorios(ordemServico *ordens, int totalOrdens, veiculo *veiculos, in
         }
     } while (opc != 0);
 }
-
-
