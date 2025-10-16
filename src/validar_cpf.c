@@ -68,7 +68,7 @@ int ler_cpf(char *entrada) {
     if (strlen(entrada) != 11) {
         return 0;
     }
-    for (int i = 0; i < 11; i++) {
+    for (int i = 0; i <= 11; i++) {
         if (entrada[i] < '0' || entrada[i] > '9') return 0;
         cpf[i] = entrada[i] - '0';
     }

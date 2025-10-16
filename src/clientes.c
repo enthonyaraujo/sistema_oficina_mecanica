@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h> 
 #include <stdlib.h>
+#include <ctype.h>
 #include "../include/clientes.h"
 #include "../include/structs.h"
 #include "../include/validar_cpf.h"
@@ -188,6 +189,7 @@ void salvar_clientes_no_arquivo(const cliente *lista, int count, const char *nom
 void cadastro_clientes(cliente **lista_ptr, int *count_ptr) {
     cliente novoCliente;
     int opcao, ch;
+
     do {
         printf("\n== Cadastro de Novo Cliente ==\n");
 
@@ -198,14 +200,32 @@ void cadastro_clientes(cliente **lista_ptr, int *count_ptr) {
 
         // Solicita CPF e valida se já existe
         while (1) {
+            int cpf_valido = 1;
+
             printf("Digite o CPF (11 digitos, sem pontos): ");
             fgets(novoCliente.cpf, sizeof(novoCliente.cpf), stdin);
             novoCliente.cpf[strcspn(novoCliente.cpf, "\n")] = 0;
 
+            // Verifica se tem 11 dígitos
             if (strlen(novoCliente.cpf) != 11) {
                 printf("Erro: O CPF deve conter exatamente 11 digitos.\n");
                 continue;
             }
+
+            // verifica se contem apenas números
+            for (int i = 0; i < 11; i++) {
+                if (!isdigit((unsigned char)novoCliente.cpf[i])) {
+                    cpf_valido = 0;
+                    break;
+                }
+            }
+
+            if (!cpf_valido) {
+                printf("Erro: O CPF deve conter apenas números.\n");
+                continue;
+            }
+
+            // Verifica duplicação
             if (cpf_duplicado(novoCliente.cpf, *lista_ptr, *count_ptr)) {
                 printf("Erro: CPF ja cadastrado.\n");
             } else {
@@ -215,9 +235,35 @@ void cadastro_clientes(cliente **lista_ptr, int *count_ptr) {
 
         ler_cpf(novoCliente.cpf); // Chamada à função para validação do CPF
 
-        printf("Digite o telefone: ");
-        fgets(novoCliente.telefone, sizeof(novoCliente.telefone), stdin);
-        novoCliente.telefone[strcspn(novoCliente.telefone, "\n")] = 0;
+        // Solicita telefone e valida se contém apenas números
+        while (1) {
+            int telefone_valido = 1;
+
+            printf("Digite o telefone (somente números): ");
+            fgets(novoCliente.telefone, sizeof(novoCliente.telefone), stdin);
+            novoCliente.telefone[strcspn(novoCliente.telefone, "\n")] = 0;
+
+            // Verifica se está vazio
+            if (strlen(novoCliente.telefone) == 0) {
+                printf("Erro: O telefone não pode estar vazio.\n");
+                continue;
+            }
+
+            // verifica se contem apenas números
+            for (size_t i = 0; i < strlen(novoCliente.telefone); i++) {
+                if (!isdigit((unsigned char)novoCliente.telefone[i])) {
+                    telefone_valido = 0;
+                    break;
+                }
+            }
+
+            if (!telefone_valido) {
+                printf("Erro: O telefone deve conter apenas números.\n");
+                continue;
+            }
+
+            break; // Telefone válido
+        }
 
         // Adiciona cliente à lista
         adiciona_cliente(lista_ptr, count_ptr, &novoCliente);
@@ -242,7 +288,7 @@ void menuClientes(cliente **lista_ptr, int *count_ptr) {
         printf("3 - Listar Clientes\n");
         printf("4 - Remover Cliente\n");
         printf("0 - Voltar ao Menu Principal\n");
-        printf("Escolha uma opcao: > ");
+        printf("> ");
 
         scanf("%d", &opcao);
         while (getchar() != '\n');
