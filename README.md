@@ -7,14 +7,27 @@ permitindo o cadastro de clientes, veículos, abertura e gerenciamento de ordens
 viço, além da geração de relatórios. O sistema deve armazenar os dados em arquivos,
 garantindo persistência.
 
+# Autores:
+- Caio Barreto Meyer | [Caio B. Meyer](https://github.com/TaiCaio)
+- Enthony Araújo de Oliveira | [Enthony Araújo](https://github.com/enthonyaraujo)
+
 ## Como compilar: 
 
 ```bash
     
-gcc src/*.c -Iinclude -o oficina
-./oficina
+1º. gcc src/*.c -Iinclude -o oficina
+
+2º. ./oficina
 
 ```
+
+## Como utilizar:
+
+Primeiro o usuario terá que compilar o programa e em seguida executalo como indica no topico a cima.
+
+O cadastro do cliente deve ser a primeira etapa feita, com ele conseguimos fazer o cadastro do veículo e em seguida o status que ele se encontra ou se foi finalizado e a descrição do problema.
+
+Com tudo isso podemos fazer todas as manipulações com o cliente e veiculo, desde alterar ou excluir alguma informação fornecida.
 
 ## Descrição Geral
 
