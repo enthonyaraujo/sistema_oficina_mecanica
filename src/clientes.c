@@ -239,13 +239,19 @@ void cadastro_clientes(cliente **lista_ptr, int *count_ptr) {
         while (1) {
             int telefone_valido = 1;
 
-            printf("Digite o telefone (somente números): ");
+            printf("Digite o telefone (DD + numero com o primeiro 9, somente numeros): ");
             fgets(novoCliente.telefone, sizeof(novoCliente.telefone), stdin);
             novoCliente.telefone[strcspn(novoCliente.telefone, "\n")] = 0;
 
+            // garante que terá 11 digitos
+            if (strlen(novoCliente.telefone) != 11) {
+                printf("Numero invalido, forneca um numero com 11 digitos Ex:23123456789");
+                continue;
+            }
+
             // Verifica se está vazio
             if (strlen(novoCliente.telefone) == 0) {
-                printf("Erro: O telefone não pode estar vazio.\n");
+                printf("Erro: O telefone nao pode estar vazio.\n");
                 continue;
             }
 
@@ -258,7 +264,7 @@ void cadastro_clientes(cliente **lista_ptr, int *count_ptr) {
             }
 
             if (!telefone_valido) {
-                printf("Erro: O telefone deve conter apenas números.\n");
+                printf("Erro: O telefone deve conter apenas numeros.\n");
                 continue;
             }
 

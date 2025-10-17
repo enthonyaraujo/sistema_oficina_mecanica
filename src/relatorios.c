@@ -13,7 +13,7 @@ void relatorio_historico_veiculo(const ordemServico *ordens, int totalOrdens, co
     // Percorre todas as ordens para encontrar as que pertencem ao veículo de placa informada
     for (int i = 0; i < totalOrdens; i++) {
         if (ordens[i].veiculo && strcmp(ordens[i].veiculo->placa, placa) == 0) {
-            printf("ID: %d | Data: %s | Descricão: %s | Status: %s\n",
+            printf("ID: %d | Data: %s | Descricao: %s | Status: %s\n",
                    ordens[i].idOrdem,
                    ordens[i].dataEntrada,
                    ordens[i].descricaoProblema,

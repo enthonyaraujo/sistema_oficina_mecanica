@@ -7,6 +7,35 @@
 #include "../include/clientes.h"
 
 
+int ano_bissexto(int ano) {
+    return (ano % 4 == 0 && ano % 100 != 0) || (ano % 400 == 0);
+}
+
+int validar_data(const char *data_str) {
+    int dia, mes, ano;
+
+    if (sscanf(data_str, "%d/%d/%d", &dia, &mes, &ano) != 3) {
+        return 0;
+    }
+
+    if (ano < 1900 || ano > 2100 || mes < 1 || mes > 12 || dia < 1) {
+        return 0;
+    }
+
+    int dias_no_mes[] = {0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    if (ano_bissexto(ano)) {
+        dias_no_mes[2] = 29;
+    }
+
+    if (dia > dias_no_mes[mes]) {
+        return 0;
+    }
+
+    return 1;
+}
+
+
 // Converte enum statusOrdem para string correspondente
 const char* status_para_string(statusOrdem s) {
     switch (s) {
@@ -140,10 +169,18 @@ void abrir_ordem(ordemServico **ordens_ptr, int *total_ptr, veiculo *lista_veicu
 
     nova.veiculo = encontrado;
 
-    // Coleta informações da nova ordem de serviço
-    printf("Data de entrada (dd/mm/aaaa): ");
-    fgets(nova.dataEntrada, sizeof(nova.dataEntrada), stdin);
-    nova.dataEntrada[strcspn(nova.dataEntrada, "\n")] = 0;
+    //verificação da data
+    while (1) {
+        printf("Data de entrada (dd/mm/aaaa): ");
+        fgets(nova.dataEntrada, sizeof(nova.dataEntrada), stdin);
+        nova.dataEntrada[strcspn(nova.dataEntrada, "\n")] = 0;
+
+        if (validar_data(nova.dataEntrada)) {
+            break;
+        } else {
+            printf("Data invalida! Por favor, insira uma data valida.\n");
+        }
+    }
 
     printf("Descricao do problema: ");
     fgets(nova.descricaoProblema, sizeof(nova.descricaoProblema), stdin);
