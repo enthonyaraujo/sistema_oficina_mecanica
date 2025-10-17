@@ -23,7 +23,7 @@ garantindo persistência.
 
 ## Como utilizar:
 
-Primeiro o usuario terá que compilar o programa e em seguida executar como indica no topico a cima.
+Primeiro o usuario terá que compilar o programa e em seguida executar como indica no tópico a cima.
 
 O cadastro do cliente deve ser a primeira etapa feita, com ele conseguimos fazer o cadastro do veículo e em seguida o status que ele se encontra ou se foi finalizado e a descrição do problema.
 
