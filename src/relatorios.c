@@ -140,12 +140,12 @@ void menuRelatorios(ordemServico *ordens, int totalOrdens, veiculo *veiculos, in
     int opc;
     do {
         printf("\n===== MENU DE RELATORIOS =====\n");
-        printf("1. Historico de servicos de um veiculo\n");
-        printf("2. Ordens abertas em um dia especifico\n");
-        printf("3. Listar veiculos de um cliente\n");
-        printf("4. Ordens por status\n");
-        printf("5. Clientes mais recorrentes\n");
-        printf("0. Voltar\n> ");
+        printf("[1] Historico de servicos de um veiculo\n");
+        printf("[2] Ordens abertas em um dia especifico\n");
+        printf("[3] Listar veiculos de um cliente\n");
+        printf("[4] Ordens por status\n");
+        printf("[5] Clientes mais recorrentes\n");
+        printf("[0] Voltar ao menu Principal\n> ");
         scanf("%d", &opc);
         getchar();
 

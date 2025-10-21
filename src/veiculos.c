@@ -246,12 +246,12 @@ void cadastro_veiculos(veiculo **veiculos_ptr, int *total_ptr, cliente *lista_cl
 void menuVeiculos(veiculo **lista_veiculos_ptr, int *total_veiculos_ptr, cliente *lista_clientes, int total_clientes) {
     int opcao;
     do {
-        printf("\n== MENU DE VEICULOS ==\n");
-        printf("1 - Cadastrar Veiculo\n");
-        printf("2 - Atualizar Veiculo\n");
-        printf("3 - Listar Veiculos\n");
-        printf("4 - Remover Veiculo\n");
-        printf("0 - Voltar ao Menu Principal\n> ");
+        printf("\n===== MENU DE VEICULOS =====\n");
+        printf("[1] Cadastrar Veiculo\n");
+        printf("[2] Atualizar Veiculo\n");
+        printf("[3] Listar Veiculos\n");
+        printf("[4] Remover Veiculo\n");
+        printf("[0] Voltar ao Menu Principal\n> ");
         scanf("%d", &opcao);
         getchar();
 

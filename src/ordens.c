@@ -232,10 +232,10 @@ void menuOrdens(ordemServico **ordens_ptr, int *totalOrdens_ptr, veiculo *lista_
     int opc;
     do {
         printf("\n===== MENU DE ORDENS DE SERVICO =====\n");
-        printf("1. Abrir nova ordem\n");
-        printf("2. Atualizar status da ordem\n");
-        printf("3. Listar todas as ordens\n");
-        printf("0. Voltar ao Menu Principal\n> ");
+        printf("[1] Abrir nova ordem\n");
+        printf("[2] Atualizar status da ordem\n");
+        printf("[3] Listar todas as ordens\n");
+        printf("[0] Voltar ao Menu Principal\n> ");
         scanf("%d", &opc);
         getchar(); // Limpa buffer
 

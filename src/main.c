@@ -32,13 +32,15 @@ int main() {
     int opcao;
     do {
         // Exibe menu principal do sistema para o usuário
-        printf("\n=== SISTEMA DE GERENCIAMENTO PARA OFICINA MECANICA ===\n");
-        printf("=== MENU PRINCIPAL ===\n");
-        printf("1 - Clientes\n");
-        printf("2 - Veiculos\n");
-        printf("3 - Ordens de Servico\n");
-        printf("4 - Relatorios\n");
-        printf("0 - Sair\n> ");
+        printf("==============================================\n");
+        printf("SISTEMA DE GERENCIAMENTO PARA OFICINA MECANICA\n");
+        printf("==============================================\n");
+        printf("Escolha uma opcao:\n");
+        printf("[1] Clientes\n");
+        printf("[2] Veiculos\n");
+        printf("[3] Ordens de Servico\n");
+        printf("[4] Relatorios\n");
+        printf("[0] Sair\n> ");
         scanf("%d", &opcao);  // Recebe opção escolhida
         getchar();            // Limpa buffer do teclado
 

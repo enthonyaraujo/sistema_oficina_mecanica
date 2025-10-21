@@ -347,12 +347,12 @@ void cadastro_clientes(cliente **lista_ptr, int *count_ptr) {
 void menuClientes(cliente **lista_ptr, int *count_ptr) {
     int opcao;
     do {
-        printf("\n=== MENU DE CLIENTES ===\n");
-        printf("1 - Cadastrar Cliente\n");
-        printf("2 - Atualizar Cliente\n");
-        printf("3 - Listar Clientes\n");
-        printf("4 - Remover Cliente\n");
-        printf("0 - Voltar ao Menu Principal\n");
+        printf("\n===== MENU DE CLIENTES =====\n");
+        printf("[1] Cadastrar Cliente\n");
+        printf("[2] Atualizar Cliente\n");
+        printf("[3] Listar Clientes\n");
+        printf("[4] Remover Cliente\n");
+        printf("[0] Voltar ao Menu Principal\n");
         printf("> ");
 
         scanf("%d", &opcao);
