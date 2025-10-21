@@ -108,27 +108,86 @@ void atualizar_cliente(cliente *lista, int count) {
         printf("Nenhum cliente cadastrado para atualizar.\n");
         return;
     }
+
     char cpf_busca[20];
     printf("Digite o CPF do cliente que deseja atualizar: ");
-    fgets(cpf_busca, sizeof(cpf_busca), stdin); // Recebe CPF para busca
+    fgets(cpf_busca, sizeof(cpf_busca), stdin);
     cpf_busca[strcspn(cpf_busca, "\n")] = 0;
 
-    // Pesquisa o cliente e solicita novo nome
     for (int i = 0; i < count; i++) {
         if (strcmp(lista[i].cpf, cpf_busca) == 0) {
-            printf("Cliente encontrado: %s\n", lista[i].nome);
+            printf("\nCliente encontrado!\n");
+            printf("Nome atual: %s\n", lista[i].nome);
+            printf("CPF atual: %s\n", lista[i].cpf);
+            printf("Telefone atual: %s\n\n", lista[i].telefone);
+
+            // Atualizar nome
             printf("Digite o novo nome (ou Enter para manter): ");
             char novo_nome[100];
             fgets(novo_nome, sizeof(novo_nome), stdin);
-            if (novo_nome[0] != '\n') { // Atualiza se o usuário digitou novo nome
+            if (novo_nome[0] != '\n') {
                 novo_nome[strcspn(novo_nome, "\n")] = 0;
                 strcpy(lista[i].nome, novo_nome);
             }
-            printf("Cliente atualizado com sucesso.\n");
+
+            // Atualizar CPF
+            while (1) {
+                printf("Digite o novo CPF (11 dígitos, ou Enter para manter): ");
+                char novo_cpf[20];
+                fgets(novo_cpf, sizeof(novo_cpf), stdin);
+
+                if (novo_cpf[0] == '\n') break; // mantem o atual
+                novo_cpf[strcspn(novo_cpf, "\n")] = 0;
+
+                int valido = 1;
+                if (strlen(novo_cpf) != 11) valido = 0;
+                for (int j = 0; j < strlen(novo_cpf); j++) {
+                    if (!isdigit((unsigned char)novo_cpf[j])) {
+                        valido = 0;
+                        break;
+                    }
+                }
+
+                if (valido) {
+                    strcpy(lista[i].cpf, novo_cpf);
+                    break;
+                } else {
+                    printf("CPF inválido! Deve conter exatamente 11 números.\n");
+                }
+            }
+
+            // Atualizar telefone
+            while (1) {
+                printf("Digite o novo numero de telefone (DD + numero com o primeiro 9, ou Enter para manter): ");
+                char novo_tel[50];
+                fgets(novo_tel, sizeof(novo_tel), stdin);
+
+                if (novo_tel[0] == '\n') break; // mantem o atual
+                novo_tel[strcspn(novo_tel, "\n")] = 0;
+
+                int valido = 1;
+                if (strlen(novo_tel) != 11) valido = 0;
+                for (int j = 0; j < strlen(novo_tel); j++) {
+                    if (!isdigit((unsigned char)novo_tel[j])) {
+                        valido = 0;
+                        break;
+                    }
+                }
+
+                if (valido) {
+                    strcpy(lista[i].telefone, novo_tel);
+                    break;
+                } else {
+                    printf("Numero invalido, forneca um numero com 11 digitos Ex:23123456789.\n");
+                }
+            }
+
+            printf("\nCliente atualizado com sucesso!\n");
             return;
         }
     }
-    printf("Cliente com CPF %s nao encontrado.\n", cpf_busca);
+
+    printf("Cliente com CPF %s não encontrado.\n", cpf_busca);
 }
 
 
