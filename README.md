@@ -13,13 +13,18 @@ garantindo persistência.
 
 ## Como compilar: 
 
-```bash
-    
-1º. gcc src/*.c -Iinclude -o oficina
+Se estiver no linux, no terminal digite: 
 
-2º. ./oficina
-
+```bash 
+gcc src/*.c -Iinclude -o oficina
+./oficina
 ```
+Se estiver no windows, no terminal digite:
+
+```cmd 
+gcc src/*.c -Iinclude -o oficina.exe
+```
+Após isso, execute o arquivo **.exe**
 
 ## Como utilizar:
 
