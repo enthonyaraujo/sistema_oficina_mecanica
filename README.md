@@ -12,9 +12,8 @@ garantindo persistência.
 - Enthony Araújo de Oliveira | [Enthony Araújo](https://github.com/enthonyaraujo)
 
 ## Como utilizar:
-Siga o manual detalhado para saber como utilizar o programa:
 
-[MANUAL DE USO](Manual_de_Uso_Sistema_de_Gerenciamento_para_Oficina_Mecânica.pdf)
+Consulte o [Manual de uso](Manual_de_Uso_Sistema_de_Gerenciamento_para_Oficina_Mecânica.pdf) para instruções detalhadas sobre como utilizar o programa.
 
 ## Descrição Geral
 
