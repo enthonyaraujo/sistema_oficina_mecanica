@@ -11,28 +11,10 @@ garantindo persistência.
 - Caio Barreto Meyer | [Caio B. Meyer](https://github.com/TaiCaio)
 - Enthony Araújo de Oliveira | [Enthony Araújo](https://github.com/enthonyaraujo)
 
-## Como compilar: 
-
-Se estiver no linux, no terminal digite: 
-
-```bash 
-gcc src/*.c -Iinclude -o oficina
-./oficina
-```
-Se estiver no windows, no terminal digite:
-
-```cmd 
-gcc src/*.c -Iinclude -o oficina.exe
-```
-Após isso, execute o arquivo **.exe**
-
 ## Como utilizar:
+Siga o manual detalhado para saber como utilizar o programa:
 
-Primeiro o usuario terá que compilar o programa e em seguida executar como indica no tópico a cima.
-
-O cadastro do cliente deve ser a primeira etapa feita, com ele conseguimos fazer o cadastro do veículo e em seguida o status que ele se encontra ou se foi finalizado e a descrição do problema.
-
-Com tudo isso podemos fazer todas as manipulações com o cliente e veiculo, desde alterar ou excluir alguma informação fornecida.
+[MANUAL DE USO](Manual_de_Uso_Sistema_de_Gerenciamento_para_Oficina_Mecânica.pdf)
 
 ## Descrição Geral
 
